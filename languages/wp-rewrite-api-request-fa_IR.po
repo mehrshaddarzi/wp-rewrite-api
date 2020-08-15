@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Rewrite API For WordPress\n"
-"POT-Creation-Date: 2020-08-15 16:53+0430\n"
-"PO-Revision-Date: 2020-08-15 16:53+0430\n"
+"POT-Creation-Date: 2020-08-15 22:37+0430\n"
+"PO-Revision-Date: 2020-08-15 22:37+0430\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: fa_IR\n"
@@ -21,6 +21,10 @@ msgstr ""
 "X-Poedit-SearchPath-0: .\n"
 "X-Poedit-SearchPathExcluded-0: *.js\n"
 
+#: ui-component.php:13
+msgid "Please wait..."
+msgstr "لطفا کمی صبر کنید..."
+
 #: wp-rewrite-api.php:184
 msgid "Your installed PHP Version is:"
 msgstr ""
@@ -33,27 +37,27 @@ msgstr ""
 msgid "</strong> or greater."
 msgstr ""
 
-#: wp-rewrite-api.php:301
+#: wp-rewrite-api.php:313
 msgid "The File not exist."
 msgstr "فایل تمپلت یافت نشد."
 
-#: wp-rewrite-api.php:324
+#: wp-rewrite-api.php:336
 msgid "This class not exist."
 msgstr "کلاس یافت نشد."
 
-#: wp-rewrite-api.php:334
+#: wp-rewrite-api.php:346
 msgid "This method not exist."
 msgstr "متد یافت نشد."
 
-#: wp-rewrite-api.php:367
+#: wp-rewrite-api.php:380
 msgid "Please login your account."
 msgstr "لطفا ابتدا وارد حساب کاربری خود شوید."
 
-#: wp-rewrite-api.php:376
+#: wp-rewrite-api.php:389
 msgid "Missing parameter(s)."
 msgstr "پارامتر های الزامی یافت نشد."
 
-#: wp-rewrite-api.php:385
+#: wp-rewrite-api.php:398
 #, php-format
 msgid "Invalid parameter(s): %s"
 msgstr "مقدار نامعتبر پارامتر: %s"

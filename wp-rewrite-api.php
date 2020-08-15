@@ -207,8 +207,20 @@ class WordPress_Rewrite_API_Request
      */
     public function load_php_files()
     {
+        // Load Template function
         require_once self::$plugin_path . '/template-function.php';
-        require_once self::$plugin_path . '/example/ajax-post.php';
+
+        /**
+         * Load Custom UI Ajax Loading Component
+         *
+         * 1) Overhang.js | https://paulkr.github.io/overhang.js/
+         * 2) PlaceHolder Loading | https://github.com/zalog/placeholder-loading
+         * 3) Jquery Confirm | https://craftpip.github.io/jquery-confirm/
+         * 4) Box Cover Modal
+         */
+        if (apply_filters('rewrite_api_request_ui_component', true) === true) {
+            require_once self::$plugin_path . '/ui-component.php';
+        }
     }
 
     /**
@@ -349,10 +361,11 @@ class WordPress_Rewrite_API_Request
         $show_js = apply_filters('rewrite_api_request_show_js_variable', true);
         if ($show_js) {
             wp_enqueue_script('wp-rewrite-api', self::$plugin_url . '/rewrite-api.js', array('jquery'), self::$plugin_version, true);
-            wp_localize_script('wp-rewrite-api', 'rewrite_api', array(
+            $rewrite_api_localize = array(
                 'url' => rtrim(get_site_url(), "/"),
                 'prefix' => self::getRewriteAPIPrefix()
-            ));
+            );
+            wp_localize_script('wp-rewrite-api', 'rewrite_api', apply_filters('rewrite_api_request_localize', $rewrite_api_localize));
         }
     }
 
