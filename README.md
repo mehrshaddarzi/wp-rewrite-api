@@ -18,7 +18,7 @@ class post
 {
 
     /**
-     * @request-url => http://site.com/rewrite-api/post/get
+     * @request-url => http://site.com/api/post/get
      */
     public static function get()
     {
@@ -30,9 +30,9 @@ class post
 ```
 
 
-### How to Change Prefix `rewrite-api` Url
+### How to Change Prefix `api` Url
 
-use `add_filter('rewrite_api_request_prefix_url', 'rewrite-api');` in WordPress, then flush rewrite;
+use `add_filter('rewrite_api_request_prefix_url', 'api');` in WordPress, then flush rewrite;
 
 
 ### How to Get My Custom Url in Template function

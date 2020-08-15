@@ -215,7 +215,7 @@ class WordPress_Rewrite_API_Request
      */
     public static function getRewriteAPIPrefix()
     {
-        return apply_filters('rewrite_api_request_prefix_url', 'rewrite-api');
+        return apply_filters('rewrite_api_request_prefix_url', 'api');
     }
 
     /**

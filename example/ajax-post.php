@@ -6,7 +6,7 @@ class post
 {
 
     /**
-     * @request-url => http://site.com/rewrite-api/post/get
+     * @request-url => http://site.com/api/post/get
      */
     public static function get()
     {
