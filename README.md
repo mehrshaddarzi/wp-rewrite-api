@@ -1,5 +1,7 @@
 # WordPress Rewrite API Ajax
-Use Rewrite API Method for Ajax Request in WordPress
+Use Rewrite API Method for Ajax Request in WordPress.
+
+Rewrite API in WordPress is Very Faster than `admin-ajax.php`.
 
 ### How to Install and Use
 Activate this plugin, then Flush Rewrite in WordPress.
