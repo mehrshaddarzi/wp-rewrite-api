@@ -1,4 +1,4 @@
-# wp-rewrite-api
+# WordPress Rewrite API Ajax
 Use Rewrite API Method for Ajax Request in WordPress
 
 ### How to Install and Use
@@ -26,3 +26,16 @@ class post
     }
 }
 ```
+
+
+### How to Change Prefix `rewrite-api` Url
+
+use `add_filter('rewrite_api_request_prefix_url', 'rewrite-api');` in WordPress, then flush rewrite;
+
+
+### Hot to Get My custom Url in Template function
+
+```php
+echo get_rewrite_api_url($class = 'user', $method = 'login'); // http://site.com/rewrite-api/user/login
+```
+
