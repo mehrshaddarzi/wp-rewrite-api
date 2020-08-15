@@ -33,7 +33,7 @@ class post
 use `add_filter('rewrite_api_request_prefix_url', 'rewrite-api');` in WordPress, then flush rewrite;
 
 
-### Hot to Get My custom Url in Template function
+### How to Get My Custom Url in Template function
 
 ```php
 echo get_rewrite_api_url($class = 'user', $method = 'login'); // http://site.com/rewrite-api/user/login
