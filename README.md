@@ -29,7 +29,7 @@ class post
 }
 ```
 
-and use rewrite_api varible in js:
+and use rewrite_api variable in js:
 
 ```js
  $(document).on("click", "[data-function=get-post]", function (e) {
