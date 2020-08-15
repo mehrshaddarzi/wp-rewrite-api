@@ -5,6 +5,9 @@ namespace WordPress_Rewrite_API_Request;
 class post
 {
 
+    /**
+     * @request-url => http://site.com/rewrite-api/post/get
+     */
     public static function get()
     {
         wp_send_json_success(array(
