@@ -4,7 +4,7 @@ jQuery(document).ready(function ($) {
      */
     $(document).on("click", "[data-function]", function (e) {
         e.preventDefault();
-        rewrite_api_method[jQuery(this).attr('data-function')]($(this));
+        window.rewrite_api_method[jQuery(this).attr('data-function')]($(this));
     });
 
     /**
@@ -12,7 +12,7 @@ jQuery(document).ready(function ($) {
      */
     $(document).on("change", "[data-function-change]", function (e) {
         e.preventDefault();
-        rewrite_api_method[jQuery(this).attr('data-function-change')]($(this));
+        window.rewrite_api_method[jQuery(this).attr('data-function-change')]($(this));
     });
 
     /**
@@ -20,7 +20,7 @@ jQuery(document).ready(function ($) {
      */
     $(document).on("submit", "[data-form-submit]", function (e) {
         e.preventDefault();
-        rewrite_api_method[jQuery(this).attr('data-form-submit')]($(this));
+        window.rewrite_api_method[jQuery(this).attr('data-form-submit')]($(this));
     });
 
     /**
@@ -28,13 +28,13 @@ jQuery(document).ready(function ($) {
      */
     $(document).on('keyup', '[data-function-key]', function (e) {
         e.preventDefault();
-        rewrite_api_method[jQuery(this).attr('data-function-key')]($(this));
+        window.rewrite_api_method[jQuery(this).attr('data-function-key')]($(this));
     });
 
     /**
      * Rewrite App Method
      */
-    var rewrite_api_method = {
+    window.rewrite_api_method = {
         /**
          * Check Exist Params
          *
@@ -94,33 +94,41 @@ jQuery(document).ready(function ($) {
          * @param {*} type
          * @param {*} arg
          */
-        request: function (method, type = 'GET', params = {}, callback) {
+        request: function (method, type = 'GET', arg = {}, params = {}, callback = false) {
 
             // Default Params
             let ajax_params = {
                 url: rewrite_api.url + '/' + rewrite_api.prefix + '/' + method,
                 type: type,
-                data: argument,
+                data: arg,
                 dataType: "json",
                 contentType: "application/json; charset=utf-8",
                 cache: false,
                 beforeSend: function () {
-                    callback({before_send: true});
-                    jQuery(document).trigger('rewrite_do_action_' + method.replace("/", "_") + '_before', {});
+                    if (callback !== false) {
+                        callback({before_send: true});
+                    }
+                    jQuery(document).trigger('add_action_' + method.replace("/", "_") + '_before', {});
                 },
                 success: function (data, textStatus, xhr) {
-                    callback(data);
-                    jQuery(document).trigger('rewrite_do_action_' + method.replace("/", "_"), data);
+                    if (callback !== false) {
+                        callback(data);
+                    }
+                    jQuery(document).trigger('add_action_' + method.replace("/", "_"), data);
                 },
                 error: function (xhr, status, error) {
-                    let error_response_connection = {'success': false, 'code': 'internet_connection'};
+                    let error_response_connection = {'success': false, 'code': 'connection'};
                     let error_response = xhr.responseJSON;
                     if (xhr.readyState == 0) {
-                        callback(error_response_connection);
-                        jQuery(document).trigger('rewrite_do_action_' + method.replace("/", "_") + '_error', error_response_connection);
+                        if (callback !== false) {
+                            callback(error_response_connection);
+                        }
+                        jQuery(document).trigger('add_action_' + method.replace("/", "_") + '_error', error_response_connection);
                     } else {
-                        callback(error_response);
-                        jQuery(document).trigger('rewrite_do_action_' + method.replace("/", "_") + '_error', error_response);
+                        if (callback !== false) {
+                            callback(error_response);
+                        }
+                        jQuery(document).trigger('add_action_' + method.replace("/", "_") + '_error', error_response);
                     }
                 }
             };

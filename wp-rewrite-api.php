@@ -355,6 +355,38 @@ class WordPress_Rewrite_API_Request
             ));
         }
     }
+
+    /**
+     * List Of Default Error in API
+     */
+    public static function auth_error()
+    {
+        if (!is_user_logged_in()) {
+            wp_send_json_error(array(
+                'code' => 'auth_user',
+                'message' => apply_filter('rewrite_api_request_auth_error_message', __('Please login your account.', 'wp-rewrite-api-request'))
+            ), 400);
+        }
+    }
+
+    public static function missing_params()
+    {
+        wp_send_json_error(array(
+            'code' => 'require_params',
+            'message' => __('Missing parameter(s).', 'wp-rewrite-api-request')
+        ), 400);
+    }
+
+    public static function invalid_param($parameter)
+    {
+        wp_send_json_error(array(
+            'code' => 'require_params',
+            'message' => sprintf(
+                __('Invalid parameter(s): %s', 'wp-rewrite-api-request'),
+                $parameter
+            )
+        ), 400);
+    }
 }
 
 /**
