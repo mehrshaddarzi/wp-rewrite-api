@@ -66,3 +66,15 @@ use `add_filter('rewrite_api_request_prefix_url', 'api');` in WordPress, then fl
 echo get_rewrite_api_url($class = 'user', $method = 'login'); // http://site.com/rewrite-api/user/login
 ```
 
+### How To Disable Load Custom UI Component
+
+```php
+add_filter('rewrite_api_request_ui_component', '__return_false');
+```
+
+For Disable Custom Ui Component, see `ui-component.php` and use every filter. for example:
+
+```php
+add_filter('rewrite_api_request_ui_component_jquery_confirm', '__return_false');
+```
+
