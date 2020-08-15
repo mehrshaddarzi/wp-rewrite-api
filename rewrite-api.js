@@ -88,13 +88,33 @@ jQuery(document).ready(function ($) {
         },
 
         /**
+         * Convert Object or Array to Json
+         *
+         * @param array
+         * @returns {string}
+         */
+        to_json: function (array) {
+            return JSON.stringify(array);
+        },
+
+        /**
+         * Convert Json to Array
+         *
+         * @param json
+         * @returns {any}
+         */
+        to_array: function (json) {
+            return JSON.parse(json);
+        },
+
+        /**
          * Ajax function
          *
          * @param {*} method
          * @param {*} type
          * @param {*} arg
          */
-        request: function (method, type = 'GET', arg = {}, params = {}, callback = false) {
+        request: function (method, type = 'GET', arg = {}, callback = false, params = {}) {
 
             // Default Params
             let ajax_params = {
@@ -110,7 +130,7 @@ jQuery(document).ready(function ($) {
                     }
                     jQuery(document).trigger('add_action_' + method.replace("/", "_") + '_before', {});
                 },
-                success: function (data, textStatus, xhr) {
+                success: function (data) {
                     if (callback !== false) {
                         callback(data);
                     }
@@ -118,7 +138,7 @@ jQuery(document).ready(function ($) {
                 },
                 error: function (xhr, status, error) {
                     let error_response_connection = {'success': false, 'code': 'connection'};
-                    let error_response = xhr.responseJSON;
+                    let error_response = $.extend({'success': false}, xhr.responseJSON);
                     if (xhr.readyState == 0) {
                         if (callback !== false) {
                             callback(error_response_connection);

@@ -1,34 +1,50 @@
-jQuery(document).ready(function($){
-
+jQuery(document).ready(function ($) {
     /**
-     * Get Post
+     * Post Methods
      */
-    $(document).on("click", "[data-function=get-post]", function (e) {
-        e.preventDefault();
-
-        $.ajax({
-            url: rewrite_api.url + '/' + rewrite_api.prefix + '/post/get',
-            type: 'GET',
-            cache: false,
-            data: {},
-            dataType: "json",
-            beforeSend: function () {
-                jQuery(document).trigger('rewrite_do_action_get_post_before', {});
-            },
-            success: function (data) {
-                jQuery(document).trigger('rewrite_do_action_get_post', {return: data});
-            },
-            error: function (xhr, textStatus, errorThrown) {
-                jQuery(document).trigger('rewrite_do_action_get_post_error', {message: xhr.responseJSON.message});
+    var post_methods = {
+        /**
+         * Example Custom Request
+         * @param tag
+         */
+        get_post_id: function ($tag = false, $post_id = 0) {
+            // Get user Input
+            if ($tag != false) {
+                $post_id = $tag.attr('post-id');
             }
-        });
-    });
+
+            // Send Request
+            window.rewrite_api_method.request('post/get', 'GET', {
+                'post-id': $post_id
+            }, function (result) {
+                if (result.before_send) {
+                    alert('loading ...');
+                } else {
+                    if (!result.success) {
+                        alert(result.data.message);
+                    } else {
+                        alert(result.data.message);
+                    }
+                }
+            });
+        }
+    };
+
+    // Push To global Rewrite API Js
+    if (typeof window.rewrite_api_method !== 'undefined') {
+        $.extend(window.rewrite_api_method, post_methods);
+    }
 
     /**
-     * This is similar to the WP function add_action();
+     * Example Bind For get Post Custom Request
      */
-    jQuery(document).bind('rewrite_do_action_get_post_before', function(event, param1, param2){
-        alert('loading ...');
+    $(document).bind('add_action_post_get_before', function (data) {
+        // Before Send
     });
-
+    $(document).bind('add_action_post_get', function (data) {
+        // success
+    });
+    $(document).bind('add_action_post_get_error', function (data) {
+        // error
+    });
 });
