@@ -199,7 +199,7 @@ class WordPress_Rewrite_API_Request
         add_action('init', array(__CLASS__, 'prefix_add_api_endpoints'));
         add_action('template_redirect', array($this, 'prefix_do_api'));
         add_filter('posts_request', array($this, 'disable_main_query_wordpress'), 10, 2);
-        add_filter('wp_head', array($this, 'add_js_url'), 10, 2);
+        add_action('wp_enqueue_scripts', array($this, 'register_js_script'), 8);
     }
 
     /**
@@ -342,22 +342,17 @@ class WordPress_Rewrite_API_Request
     }
 
     /**
-     * Add To WP-Head Template
+     * Register JS Script
      */
-    public function add_js_url()
+    public function register_js_script()
     {
         $show_js = apply_filters('rewrite_api_request_show_js_variable', true);
         if ($show_js) {
-            ?>
-            <script type='text/javascript'>
-                /* <![CDATA[ */
-                var rewrite_api = {
-                    "url": "<?php echo rtrim(get_site_url(), "/"); ?>",
-                    "prefix": "<?php echo self::getRewriteAPIPrefix(); ?>",
-                };
-                /* ]]> */
-            </script>
-            <?php
+            wp_enqueue_script('wp-rewrite-api', self::$plugin_url . '/rewrite-api.js', array('jquery'), self::$plugin_version, true);
+            wp_localize_script('wp-rewrite-api', 'rewrite_api', array(
+                'url' => rtrim(get_site_url(), "/"),
+                'prefix' => self::getRewriteAPIPrefix()
+            ));
         }
     }
 }
