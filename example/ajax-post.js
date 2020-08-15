@@ -24,4 +24,11 @@ jQuery(document).ready(function($){
         });
     });
 
+    /**
+     * This is similar to the WP function add_action();
+     */
+    jQuery(document).bind('rewrite_do_action_get_post_before', function(event, param1, param2){
+        alert('loading ...');
+    });
+
 });
