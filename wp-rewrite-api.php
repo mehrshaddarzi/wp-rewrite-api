@@ -199,6 +199,7 @@ class WordPress_Rewrite_API_Request
         add_action('init', array(__CLASS__, 'prefix_add_api_endpoints'));
         add_action('template_redirect', array($this, 'prefix_do_api'));
         add_filter('posts_request', array($this, 'disable_main_query_wordpress'), 10, 2);
+        add_filter('wp_head', array($this, 'add_js_url'), 10, 2);
     }
 
     /**
@@ -206,8 +207,8 @@ class WordPress_Rewrite_API_Request
      */
     public function load_php_files()
     {
-        require_once self::$plugin_path.'/template-function.php';
-        require_once self::$plugin_path.'/example/ajax-post.php';
+        require_once self::$plugin_path . '/template-function.php';
+        require_once self::$plugin_path . '/example/ajax-post.php';
     }
 
     /**
@@ -327,7 +328,7 @@ class WordPress_Rewrite_API_Request
         }
 
         // Check Exist Method
-        if (!method_exists($class_name, $method)) {
+        if (substr($method, 0, 1) == "_" || !method_exists($class_name, $method)) {
             wp_send_json(
                 array(
                     'message' => __('This method not exist.', 'wp-rewrite-api-request')
@@ -338,6 +339,26 @@ class WordPress_Rewrite_API_Request
 
         // Run Method
         $class_name::{$method}();
+    }
+
+    /**
+     * Add To WP-Head Template
+     */
+    public function add_js_url()
+    {
+        $show_js = apply_filters('rewrite_api_request_show_js_variable', true);
+        if ($show_js) {
+            ?>
+            <script type='text/javascript'>
+                /* <![CDATA[ */
+                var rewrite_api = {
+                    "url": "<?php echo rtrim(get_site_url(), "/"); ?>",
+                    "prefix": "<?php echo self::getRewriteAPIPrefix(); ?>",
+                };
+                /* ]]> */
+            </script>
+            <?php
+        }
     }
 }
 
