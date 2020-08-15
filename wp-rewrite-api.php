@@ -199,7 +199,7 @@ class WordPress_Rewrite_API_Request
         add_action('init', array(__CLASS__, 'prefix_add_api_endpoints'));
         add_action('template_redirect', array($this, 'prefix_do_api'));
         add_filter('posts_request', array($this, 'disable_main_query_wordpress'), 10, 2);
-        add_action('wp_enqueue_scripts', array($this, 'register_js_script'), 8);
+        add_action('wp_enqueue_scripts', array($this, 'register_js_script'), 5);
     }
 
     /**
