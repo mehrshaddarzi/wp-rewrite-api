@@ -22,6 +22,20 @@ class WordPress_Rewrite_API_Request_Ui_Component
                 return $localize;
             }, 9);
         }
+
+        // Show Alert in web page Overhang
+        if (apply_filters('rewrite_api_request_ui_component_overhang_js', true) === true and isset($_GET['overhang_alert']) and isset($_GET['overhang_type'])) {
+            add_filter('rewrite_api_request_localize', function ($localize) {
+                $text = self::get_overhang_text(sanitize_text_field($_GET['overhang_alert']));
+                if (!is_null($text)) {
+                    $localize['overhang_alert'] = array(
+                        'type' => sanitize_text_field($_GET['overhang_type']),
+                        'text' => self::get_overhang_text(sanitize_text_field($_GET['overhang_alert'])),
+                    );
+                }
+                return $localize;
+            }, 9);
+        }
     }
 
     public function register_js_script()
@@ -54,6 +68,27 @@ class WordPress_Rewrite_API_Request_Ui_Component
             wp_enqueue_style('box-cover', $plugin_url . '/asset/box-cover/box-cover.css', array(), $plugin_version, 'all');
             wp_enqueue_script('box-cover-js', $plugin_url . '/asset/box-cover/script.js', array('jquery', 'wp-rewrite-api'), $plugin_version, true);
         }
+    }
+
+    public static function get_overhang_text($type)
+    {
+        $array = apply_filters('rewrite_api_request_overhang_alert', array(
+            'test_alert' => __('Example Overhang Alert', 'wp-rewrite-api-request')
+        ));
+
+        if (isset($array[$type])) {
+            return $array[$type];
+        }
+
+        return null;
+    }
+
+    public static function generate_overhang_link($url, $type = 'success', $alert)
+    {
+        return add_query_arg(array(
+            'overhang_type' => $type,
+            'overhang_alert' => $alert,
+        ), $url);
     }
 }
 

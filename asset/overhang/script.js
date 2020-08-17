@@ -28,4 +28,9 @@ jQuery(document).ready(function ($) {
     if (typeof window.rewrite_api_method !== 'undefined') {
         $.extend(window.rewrite_api_method, overhang_js_methods);
     }
+
+    // Show Overhang in View Page
+    if (window.rewrite_api_method.isObject(rewrite_api.overhang_alert)) {
+        window.rewrite_api_method.show_overhang(rewrite_api.overhang_alert.type, rewrite_api.overhang_alert.text);
+    }
 });

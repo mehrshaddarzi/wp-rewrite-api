@@ -363,10 +363,57 @@ class WordPress_Rewrite_API_Request
             wp_enqueue_script('wp-rewrite-api', self::$plugin_url . '/rewrite-api.js', array('jquery'), self::$plugin_version, true);
             $rewrite_api_localize = array(
                 'url' => rtrim(get_site_url(), "/"),
-                'prefix' => self::getRewriteAPIPrefix()
+                'prefix' => self::getRewriteAPIPrefix(),
+                'page' => self::get_wordpress_page_type(),
+                'object_id' => get_queried_object_id(),
+                'auth' => (is_user_logged_in() === true ? 1 : 0),
+                'token' => wp_create_nonce('rewrite-ajax-nonce')
             );
             wp_localize_script('wp-rewrite-api', 'rewrite_api', apply_filters('rewrite_api_request_localize', $rewrite_api_localize));
         }
+    }
+
+    /**
+     * Get WordPress Page Type
+     */
+    public static function get_wordpress_page_type()
+    {
+        global $wp_query;
+        $loop = 'not-found';
+
+        if ($wp_query->is_page) {
+            $loop = is_front_page() ? 'front' : 'page';
+        } elseif ($wp_query->is_home) {
+            $loop = 'home';
+        } elseif ($wp_query->is_single) {
+            $loop = ($wp_query->is_attachment) ? 'attachment' : 'single';
+        } elseif ($wp_query->is_category) {
+            $loop = 'category';
+        } elseif ($wp_query->is_tag) {
+            $loop = 'tag';
+        } elseif ($wp_query->is_tax) {
+            $loop = 'tax';
+        } elseif ($wp_query->is_archive) {
+            if ($wp_query->is_day) {
+                $loop = 'day';
+            } elseif ($wp_query->is_month) {
+                $loop = 'month';
+            } elseif ($wp_query->is_year) {
+                $loop = 'year';
+            } elseif ($wp_query->is_author) {
+                $loop = 'author';
+            } else {
+                $loop = 'archive';
+            }
+        } elseif ($wp_query->is_search) {
+            $loop = 'search';
+        } elseif ($wp_query->is_404) {
+            $loop = 'not-found';
+        } elseif ($wp_query->is_author) {
+            $loop = 'author';
+        }
+
+        return $loop;
     }
 
     /**
@@ -398,6 +445,33 @@ class WordPress_Rewrite_API_Request
                 __('Invalid parameter(s): %s', 'wp-rewrite-api-request'),
                 $parameter
             )
+        ), 400);
+    }
+
+    public static function empty_param($parameter)
+    {
+        wp_send_json_error(array(
+            'code' => 'empty_params',
+            'message' => sprintf(
+                __('Please fill %s', 'wp-rewrite-api-request'),
+                $parameter
+            )
+        ), 400);
+    }
+
+    public static function not_permission()
+    {
+        wp_send_json_error(array(
+            'code' => 'not_permission',
+            'message' => __('No access to this Request.', 'wp-rewrite-api-request')
+        ), 400);
+    }
+
+    public static function not_success_action()
+    {
+        wp_send_json_error(array(
+            'code' => 'not_success_request',
+            'message' => __('The operation was not successful, please try again.', 'wp-rewrite-api-request')
         ), 400);
     }
 }

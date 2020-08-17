@@ -108,6 +108,36 @@ jQuery(document).ready(function ($) {
         },
 
         /**
+         * Check File Size
+         *
+         * @param $id
+         * @param $mb
+         */
+        check_file_size: function ($id, $mb) {
+            let f = $("input[id=" + $id + "]")[0].files[0];
+            let mb = $mb * 1024 * 1024;
+            if (f.size > mb || f.fileSize > mb) {
+                return true;
+            }
+            return false;
+        },
+
+        /**
+         * Check File Extension
+         *
+         * @param $id
+         * @param $ext_array
+         */
+        check_file_ext: function ($id, $ext_array = ['jpeg', 'jpg', 'png']) {
+            let file_upload = $("input[id=" + $id + "]").val();
+            if ($.inArray(file_upload.split('.').pop().toLowerCase(), $ext_array) === -1) {
+                return false;
+            }
+
+            return true;
+        },
+
+        /**
          * Ajax function
          *
          * @param {*} method
@@ -115,6 +145,11 @@ jQuery(document).ready(function ($) {
          * @param {*} arg
          */
         request: function (method, type = 'GET', arg = {}, callback = false, params = {}) {
+
+            // Extend in arg
+            if (this.isset(window.rewrite_api_method, 'input_' + method.replace("/", "_"))) {
+                arg = $.extend(arg, window.rewrite_api_method['input_' + method.replace("/", "_")]());
+            }
 
             // Default Params
             let ajax_params = {
