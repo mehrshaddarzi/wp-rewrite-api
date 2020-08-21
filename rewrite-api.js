@@ -4,7 +4,7 @@ jQuery(document).ready(function ($) {
      */
     $(document).on("click", "[data-function]", function (e) {
         e.preventDefault();
-        window.rewrite_api_method[jQuery(this).attr('data-function')]($(this));
+        window.rewrite_api_method[$(this).attr('data-function')]($(this));
     });
 
     /**
@@ -12,7 +12,7 @@ jQuery(document).ready(function ($) {
      */
     $(document).on("change", "[data-function-change]", function (e) {
         e.preventDefault();
-        window.rewrite_api_method[jQuery(this).attr('data-function-change')]($(this));
+        window.rewrite_api_method[$(this).attr('data-function-change')]($(this));
     });
 
     /**
@@ -20,7 +20,7 @@ jQuery(document).ready(function ($) {
      */
     $(document).on("submit", "[data-form-submit]", function (e) {
         e.preventDefault();
-        window.rewrite_api_method[jQuery(this).attr('data-form-submit')]($(this));
+        window.rewrite_api_method[$(this).attr('data-form-submit')]($(this));
     });
 
     /**
@@ -28,7 +28,7 @@ jQuery(document).ready(function ($) {
      */
     $(document).on('keyup', '[data-function-key]', function (e) {
         e.preventDefault();
-        window.rewrite_api_method[jQuery(this).attr('data-function-key')]($(this));
+        window.rewrite_api_method[$(this).attr('data-function-key')]($(this));
     });
 
     /**
@@ -138,11 +138,31 @@ jQuery(document).ready(function ($) {
         },
 
         /**
+         * Get List Of Object data- attribute from Tag
+         *
+         * @param $tag | tag is jQuery Object $("#div)
+         * @returns {{}}
+         */
+        attr_data: function ($tag) {
+            let attr = {};
+            $tag.each(function () {
+                $.each(this.attributes, function (i, a) {
+                    if (a.name.substr(0, 4) === "data") {
+                        attr[a.name.replace("data-", "")] = a.value;
+                    }
+                });
+            });
+            return attr;
+        },
+
+        /**
          * Ajax function
          *
          * @param {*} method
          * @param {*} type
          * @param {*} arg
+         * @param callback
+         * @param params
          */
         request: function (method, type = 'GET', arg = {}, callback = false, params = {}) {
 
@@ -163,27 +183,27 @@ jQuery(document).ready(function ($) {
                     if (callback !== false) {
                         callback({before_send: true});
                     }
-                    jQuery(document).trigger('add_action_' + method.replace("/", "_") + '_before', {});
+                    $(document).trigger('add_action_' + method.replace("/", "_") + '_before', {});
                 },
                 success: function (data) {
                     if (callback !== false) {
                         callback(data);
                     }
-                    jQuery(document).trigger('add_action_' + method.replace("/", "_"), data);
+                    $(document).trigger('add_action_' + method.replace("/", "_"), data);
                 },
                 error: function (xhr, status, error) {
                     let error_response_connection = {'success': false, 'code': 'connection'};
                     let error_response = $.extend({'success': false}, xhr.responseJSON);
-                    if (xhr.readyState == 0) {
+                    if (xhr.readyState === 0) {
                         if (callback !== false) {
                             callback(error_response_connection);
                         }
-                        jQuery(document).trigger('add_action_' + method.replace("/", "_") + '_error', error_response_connection);
+                        $(document).trigger('add_action_' + method.replace("/", "_") + '_error', error_response_connection);
                     } else {
                         if (callback !== false) {
                             callback(error_response);
                         }
-                        jQuery(document).trigger('add_action_' + method.replace("/", "_") + '_error', error_response);
+                        $(document).trigger('add_action_' + method.replace("/", "_") + '_error', error_response);
                     }
                 }
             };
@@ -198,6 +218,59 @@ jQuery(document).ready(function ($) {
 
             // Send Request
             $.ajax($.extend({}, ajax_params, params));
+        },
+
+        /**
+         * View in Ajax
+         */
+        view: function ($tag = false, $view = '', $params = {}) {
+            // Get View
+            if ($tag.attr('data-view')) {
+                $view = $tag.attr('data-view');
+            }
+
+            // Get Custom $params
+            let attribute = this.attr_data($tag);
+            if (Object.keys(attribute).length > 1) {
+                $params = attribute;
+            }
+
+            window.rewrite_api_method.request('view/' + $view, 'GET', $params);
+        },
+
+        /**
+         * Add Action
+         *
+         * @param $trigger
+         * @param $before
+         * @param $success
+         * @param $error
+         * @see https://www.coderrr.com/wordpress-hooks-and-jquery-custom-events/
+         */
+        add_action: function ($trigger, $before = false, $success = false, $error = false) {
+            // Sanitize Trigger
+            $trigger = $trigger.replace("/", "_");
+
+            // BeforeSend
+            if ($before !== false) {
+                $(document).on('add_action_' + $trigger + '_before', function (event, data) {
+                    $before(data, event);
+                });
+            }
+
+            // Success
+            if ($success !== false) {
+                $(document).on('add_action_' + $trigger, function (event, data) {
+                    $success(data, event);
+                });
+            }
+
+            // Error
+            if ($error !== false) {
+                $(document).on('add_action_' + $trigger + '_error', function (event, data) {
+                    $error(data, event);
+                });
+            }
         }
     };
 });

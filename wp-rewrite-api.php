@@ -306,9 +306,9 @@ class WordPress_Rewrite_API_Request
         if ($class == "view") {
 
             // Check Exist File
-            $file_path = rtrim(get_template_directory()) . '/' . rtrim(self::getBasicViewDir(), "/") . "/" . $method . '.php';
+            $file_path = rtrim(get_template_directory()) . '/' . rtrim(self::getBasicViewDir(), "/") . "/" . str_ireplace(".", "/", $method) . '.php';
             if (!file_exists($file_path)) {
-                wp_send_json(
+                wp_send_json_error(
                     array(
                         'message' => __('The File not exist.', 'wp-rewrite-api-request'),
                         'file' => $file_path
@@ -323,7 +323,7 @@ class WordPress_Rewrite_API_Request
             $html = ob_get_clean();
 
             // Response
-            wp_send_json(array(
+            wp_send_json_success(array(
                 'html' => $html
             ), 200);
         }
@@ -331,7 +331,7 @@ class WordPress_Rewrite_API_Request
         // Check Exist Class
         $class_name = '\\' . __NAMESPACE__ . '\\' . $class;
         if (!class_exists($class_name)) {
-            wp_send_json(
+            wp_send_json_error(
                 array(
                     'message' => __('This class not exist.', 'wp-rewrite-api-request')
                 ),
@@ -341,12 +341,34 @@ class WordPress_Rewrite_API_Request
 
         // Check Exist Method
         if (substr($method, 0, 1) == "_" || !method_exists($class_name, $method)) {
-            wp_send_json(
+            wp_send_json_error(
                 array(
                     'message' => __('This method not exist.', 'wp-rewrite-api-request')
                 ),
                 403
             );
+        }
+
+        // Before Run Method
+        do_action('rewrite_api_request_before_run', $class_name, $method);
+
+        // Check Nonce
+        $nonce = apply_filters('rewrite_api_request_check_nonce', false);
+        if ($nonce) {
+            $nonce_field = apply_filters('rewrite_api_request_nonce_field', '_nonce');
+
+            // Check Nonce
+            if (!isset($_REQUEST[$nonce_field])) {
+                self::invalid_param($nonce_field);
+            }
+
+            // Check Nonce
+            if (!wp_verify_nonce($_REQUEST[$nonce_field], apply_filters('rewrite_api_request_nonce_field_security', 'rewrite-api-nonce'))) {
+                wp_send_json_error(array(
+                    'code' => 'require_nonce',
+                    'message' => __('Security check!', 'wp-rewrite-api-request')
+                ), 400);
+            }
         }
 
         // Run Method
@@ -365,9 +387,9 @@ class WordPress_Rewrite_API_Request
                 'url' => rtrim(get_site_url(), "/"),
                 'prefix' => self::getRewriteAPIPrefix(),
                 'page' => self::get_wordpress_page_type(),
-                'object_id' => get_queried_object_id(),
-                'auth' => (is_user_logged_in() === true ? 1 : 0),
-                'token' => wp_create_nonce('rewrite-ajax-nonce')
+                'object_id' => (int)get_queried_object_id(),
+                'auth' => (int)(is_user_logged_in() === true ? 1 : 0),
+                'token' => wp_create_nonce(apply_filters('rewrite_api_request_nonce_field_security', 'rewrite-api-nonce'))
             );
             wp_localize_script('wp-rewrite-api', 'rewrite_api', apply_filters('rewrite_api_request_localize', $rewrite_api_localize));
         }
@@ -419,6 +441,7 @@ class WordPress_Rewrite_API_Request
     /**
      * List Of Default Error in API
      */
+
     public static function auth_error()
     {
         if (!is_user_logged_in()) {
