@@ -20,6 +20,15 @@
     /*font-family: "iranyekan", tahoma;*/
 }
 
+.overhang-link {
+    background: #fff;
+    display: inline-block;
+    border-radius: 5px;
+    padding: 2px 8px;
+    margin-right: 10px;
+    color: #323232;
+}
+
 @-webkit-keyframes jconfirm-spin {
     from {
         -webkit-transform: rotate(0deg);
@@ -309,7 +318,7 @@ body[class*="jconfirm-no-scroll-"] {
     height: 40px;
     width: 20px;
     position: absolute;
-    top: 10px;
+    top: 15px;
     right: 10px;
     cursor: pointer;
     opacity: 0.6;
@@ -596,7 +605,7 @@ body[class*="jconfirm-no-scroll-"] {
 }
 
 .jconfirm.jconfirm-rtl div.jconfirm-closeIcon {
-    left: 5px;
+    left: 10px;
     right: auto;
 }
 

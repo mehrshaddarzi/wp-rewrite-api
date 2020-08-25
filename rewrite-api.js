@@ -108,6 +108,15 @@ jQuery(document).ready(function ($) {
         },
 
         /**
+         * Redirect to Custom Url
+         *
+         * @param url
+         */
+        redirect: function(url) {
+            window.location.href = url;
+        },
+
+        /**
          * Check File Size
          *
          * @param $id
@@ -156,15 +165,41 @@ jQuery(document).ready(function ($) {
         },
 
         /**
+         * Get Form inputs by data-form attribute
+         *
+         * @param $tag | is jquery $("") tags
+         */
+        get_form_inputs: function($tag) {
+            let arg = {};
+            let form_name = $tag.attr('data-form');
+            $("input[data-form= " + form_name + "]").each(function (index) {
+                if ($(this).attr('name')) {
+                    let input = $(this);
+                    if (input.length && input.val().length > 0) {
+                        arg[$(this).attr('name')] = input.val();
+                    }
+                }
+            });
+
+            // Custom Action For Search
+            if ($tag.attr('data-do-action')) {
+                arg['do_action'] = $tag.attr('data-do-action');
+            }
+
+            return arg;
+        },
+
+        /**
          * Ajax function
          *
          * @param {*} method
          * @param {*} type
          * @param {*} arg
+         * @param {*} tag JQuery Tag
          * @param callback
          * @param params
          */
-        request: function (method, type = 'GET', arg = {}, callback = false, params = {}) {
+        request: function (method, type = 'GET', arg = {}, tag = false, callback = false, params = {}) {
 
             // Extend in arg
             if (this.isset(window.rewrite_api_method, 'input_' + method.replace("/", "_"))) {
@@ -179,17 +214,18 @@ jQuery(document).ready(function ($) {
                 dataType: "json",
                 contentType: "application/json; charset=utf-8",
                 cache: false,
-                beforeSend: function () {
+                beforeSend: function (xhr, opts) {
                     if (callback !== false) {
                         callback({before_send: true});
                     }
-                    $(document).trigger('add_action_' + method.replace("/", "_") + '_before', {});
+                    $(document).trigger('add_action_' + method.replace("/", "_") + '_before', {xhr: xhr, tag: tag});
+                    // use xhr.abort(); or r.xhr.abort(); in add_action for stop ajax
                 },
                 success: function (data) {
                     if (callback !== false) {
                         callback(data);
                     }
-                    $(document).trigger('add_action_' + method.replace("/", "_"), data);
+                    $(document).trigger('add_action_' + method.replace("/", "_"), $.extend(data, {tag: tag}));
                 },
                 error: function (xhr, status, error) {
                     let error_response_connection = {'success': false, 'code': 'connection'};
@@ -198,12 +234,12 @@ jQuery(document).ready(function ($) {
                         if (callback !== false) {
                             callback(error_response_connection);
                         }
-                        $(document).trigger('add_action_' + method.replace("/", "_") + '_error', error_response_connection);
+                        $(document).trigger('add_action_' + method.replace("/", "_") + '_error', $.extend(error_response_connection, {tag: tag}));
                     } else {
                         if (callback !== false) {
                             callback(error_response);
                         }
-                        $(document).trigger('add_action_' + method.replace("/", "_") + '_error', error_response);
+                        $(document).trigger('add_action_' + method.replace("/", "_") + '_error', $.extend(error_response, {tag: tag}));
                     }
                 }
             };
@@ -217,7 +253,7 @@ jQuery(document).ready(function ($) {
             }
 
             // Send Request
-            $.ajax($.extend({}, ajax_params, params));
+            $.ajax($.extend(ajax_params, params));
         },
 
         /**
@@ -235,7 +271,7 @@ jQuery(document).ready(function ($) {
                 $params = attribute;
             }
 
-            window.rewrite_api_method.request('view/' + $view, 'GET', $params);
+            window.rewrite_api_method.request('view/' + $view, 'GET', $params, $tag);
         },
 
         /**

@@ -18,14 +18,15 @@ class post
 {
 
     /**
-     * @request-url => http://site.com/api/post/get
+     * @request_url => http://site.com/api/post/get
      */
     public static function get()
     {
         wp_send_json_success(array(
-            'post_id' => 1
+            'data' => get_post($_REQUEST['post_id'], ARRAY_A)
         ), 200);
     }
+
 }
 ```
 
@@ -55,13 +56,14 @@ class wc_cart
     }
 
     // Add Js Script
+    // Helper Function start with _
     public function _register_js_script()
     {
         wp_enqueue_script('woocommerce-cart-rewrite', '../wc-cart.js' , array('jquery', 'wp-rewrite-api'), '1.0.0', true);
     }
 
     /**
-     * @request-url => http://site.com/api/wc_cart
+     * @request_url => http://site.com/api/wc_cart/add
      */
     public static function add()
     {
@@ -82,18 +84,20 @@ class wc_cart
 ```
 
 ##### 2) Create Js File (wc-cart.js)
+
 ```js
 jQuery(document).ready(function ($) {
 
     let woocommerce_cart_methods = {
         wc_add_to_cart: function ($tag = false, $product_id = 0) {
+
             // Sanitize Params
             if ($tag !== false) {
                 $product_id = $tag.attr('data-product-id');
             }
             window.rewrite_api_method.request('wc_cart/add', 'GET', {
                 'product_id': $product_id
-            });
+            }, $tag);
         }
     };
 
@@ -105,9 +109,11 @@ jQuery(document).ready(function ($) {
 ```
 
 ##### 3) Use in Every Project according to FrontEnd
+
 ```html
 <a href="#" data-function="wc_add_to_cart" data-product-id="123">Add to Cart</a>
 ```
+
 
 ```js
 jQuery(document).ready(function ($) {

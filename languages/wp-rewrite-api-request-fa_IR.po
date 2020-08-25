@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Rewrite API For WordPress\n"
-"POT-Creation-Date: 2020-08-17 20:29+0430\n"
-"PO-Revision-Date: 2020-08-17 20:30+0430\n"
+"POT-Creation-Date: 2020-08-24 20:33+0430\n"
+"PO-Revision-Date: 2020-08-24 20:33+0430\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: fa_IR\n"
@@ -23,7 +23,7 @@ msgstr ""
 
 #: ui-component.php:13
 msgid "Please wait..."
-msgstr "لطفا کمی صبر کنید..."
+msgstr "لطفا کمی صبر کنید .."
 
 #: ui-component.php:76
 msgid "Example Overhang Alert"
@@ -53,29 +53,33 @@ msgstr "کلاس یافت نشد."
 msgid "This method not exist."
 msgstr "متد یافت نشد."
 
-#: wp-rewrite-api.php:427
+#: wp-rewrite-api.php:369
+msgid "Security check!"
+msgstr ""
+
+#: wp-rewrite-api.php:450
 msgid "Please login your account."
 msgstr "لطفا ابتدا وارد حساب کاربری خود شوید."
 
-#: wp-rewrite-api.php:436
+#: wp-rewrite-api.php:459
 msgid "Missing parameter(s)."
 msgstr "پارامتر های الزامی یافت نشد."
 
-#: wp-rewrite-api.php:445
+#: wp-rewrite-api.php:468
 #, php-format
 msgid "Invalid parameter(s): %s"
 msgstr "مقدار  پارامتر %s نامعتبر می باشد"
 
-#: wp-rewrite-api.php:456
+#: wp-rewrite-api.php:479
 #, php-format
 msgid "Please fill %s"
 msgstr "لطفا %s را وارد نمایید"
 
-#: wp-rewrite-api.php:466
+#: wp-rewrite-api.php:489
 msgid "No access to this Request."
 msgstr "به این درخواست دسترسی ندارید."
 
-#: wp-rewrite-api.php:474
+#: wp-rewrite-api.php:497
 msgid "The operation was not successful, please try again."
 msgstr "عملیات ناموفق بوده است ، لطفا دوباره تلاش کنید."
 

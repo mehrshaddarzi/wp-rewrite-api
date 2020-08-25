@@ -387,12 +387,22 @@ class WordPress_Rewrite_API_Request
                 'url' => rtrim(get_site_url(), "/"),
                 'prefix' => self::getRewriteAPIPrefix(),
                 'page' => self::get_wordpress_page_type(),
+                'slug' => self::get_page_slug(),
                 'object_id' => (int)get_queried_object_id(),
                 'auth' => (int)(is_user_logged_in() === true ? 1 : 0),
                 'token' => wp_create_nonce(apply_filters('rewrite_api_request_nonce_field_security', 'rewrite-api-nonce'))
             );
             wp_localize_script('wp-rewrite-api', 'rewrite_api', apply_filters('rewrite_api_request_localize', $rewrite_api_localize));
         }
+    }
+
+    /**
+     * Get Page Slug
+     */
+    public static function get_page_slug()
+    {
+        $actual_link = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
+        return ltrim(str_ireplace(get_site_url(), "", $actual_link), "/");
     }
 
     /**
@@ -447,7 +457,7 @@ class WordPress_Rewrite_API_Request
         if (!is_user_logged_in()) {
             wp_send_json_error(array(
                 'code' => 'auth_user',
-                'message' => apply_filter('rewrite_api_request_auth_error_message', __('Please login your account.', 'wp-rewrite-api-request'))
+                'message' => apply_filters('rewrite_api_request_auth_error_message', __('Please login your account.', 'wp-rewrite-api-request'))
             ), 400);
         }
     }
