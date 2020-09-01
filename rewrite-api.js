@@ -172,7 +172,7 @@ jQuery(document).ready(function ($) {
         get_form_inputs: function($tag) {
             let arg = {};
             let form_name = $tag.attr('data-form');
-            $("input[data-form= " + form_name + "]").each(function (index) {
+            $("input[data-form= " + form_name + "], textarea[data-form= " + form_name + "], select[data-form= " + form_name + "]").each(function (index) {
                 if ($(this).attr('name')) {
                     let input = $(this);
                     if (input.length && input.val().length > 0) {
@@ -246,8 +246,8 @@ jQuery(document).ready(function ($) {
 
             // Check Params For POST
             if (type.toUpperCase() === "POST") {
-                ajax_params['processData'] = false;
-                ajax_params['contentType'] = false;
+                ajax_params['contentType'] = 'application/x-www-form-urlencoded';
+                //ajax_params['processData'] = false;
                 ajax_params['mimeType'] = "multipart/form-data";
                 ajax_params['dataType'] = "json";
             }

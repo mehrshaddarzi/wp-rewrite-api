@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Rewrite API For WordPress\n"
-"POT-Creation-Date: 2020-08-24 20:33+0430\n"
-"PO-Revision-Date: 2020-08-24 20:33+0430\n"
+"POT-Creation-Date: 2020-08-25 18:51+0430\n"
+"PO-Revision-Date: 2020-08-25 18:51+0430\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: fa_IR\n"
@@ -57,29 +57,29 @@ msgstr "متد یافت نشد."
 msgid "Security check!"
 msgstr ""
 
-#: wp-rewrite-api.php:450
+#: wp-rewrite-api.php:460
 msgid "Please login your account."
 msgstr "لطفا ابتدا وارد حساب کاربری خود شوید."
 
-#: wp-rewrite-api.php:459
+#: wp-rewrite-api.php:469
 msgid "Missing parameter(s)."
 msgstr "پارامتر های الزامی یافت نشد."
 
-#: wp-rewrite-api.php:468
+#: wp-rewrite-api.php:478
 #, php-format
 msgid "Invalid parameter(s): %s"
 msgstr "مقدار  پارامتر %s نامعتبر می باشد"
 
-#: wp-rewrite-api.php:479
+#: wp-rewrite-api.php:489
 #, php-format
 msgid "Please fill %s"
 msgstr "لطفا %s را وارد نمایید"
 
-#: wp-rewrite-api.php:489
+#: wp-rewrite-api.php:499
 msgid "No access to this Request."
 msgstr "به این درخواست دسترسی ندارید."
 
-#: wp-rewrite-api.php:497
+#: wp-rewrite-api.php:507
 msgid "The operation was not successful, please try again."
 msgstr "عملیات ناموفق بوده است ، لطفا دوباره تلاش کنید."
 
