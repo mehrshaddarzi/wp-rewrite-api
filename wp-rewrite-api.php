@@ -390,6 +390,7 @@ class WordPress_Rewrite_API_Request
                 'slug' => self::get_page_slug(),
                 'object_id' => (int)get_queried_object_id(),
                 'auth' => (int)(is_user_logged_in() === true ? 1 : 0),
+                'rtl' => (int)(is_rtl() === true ? 1 : 0),
                 'token' => wp_create_nonce(apply_filters('rewrite_api_request_nonce_field_security', 'rewrite-api-nonce'))
             );
             wp_localize_script('wp-rewrite-api', 'rewrite_api', apply_filters('rewrite_api_request_localize', $rewrite_api_localize));
