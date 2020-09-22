@@ -18,7 +18,7 @@ class WordPress_Rewrite_API_Request_Ui_Component
         // Custom Localize For Jquery-Confirm
         if (apply_filters('rewrite_api_request_ui_component_jquery_confirm', true) === true) {
             add_filter('rewrite_api_request_localize', function ($localize) {
-                $localize['svg_icon_color'] = '#f15651';
+                $localize['svg_icon_color'] = '#FF324D';
                 return $localize;
             }, 9);
         }

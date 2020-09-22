@@ -175,9 +175,9 @@ jQuery(document).ready(function ($) {
             $("input[data-form= " + form_name + "], textarea[data-form= " + form_name + "], select[data-form= " + form_name + "]").each(function (index) {
                 if ($(this).attr('name')) {
                     let input = $(this);
-                    if (input.length && input.val().length > 0) {
+                    //if (input.length && input.val().length > 0) {
                         arg[$(this).attr('name')] = input.val();
-                    }
+                    //}
                 }
             });
 
