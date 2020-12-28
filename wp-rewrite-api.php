@@ -385,6 +385,7 @@ class WordPress_Rewrite_API_Request
             wp_enqueue_script('wp-rewrite-api', self::$plugin_url . '/rewrite-api.js', array('jquery'), self::$plugin_version, true);
             $rewrite_api_localize = array(
                 'url' => rtrim(get_site_url(), "/"),
+                'lang' => get_locale(),
                 'prefix' => self::getRewriteAPIPrefix(),
                 'page' => self::get_wordpress_page_type(),
                 'slug' => self::get_page_slug(),
