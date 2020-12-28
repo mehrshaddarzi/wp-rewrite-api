@@ -4,8 +4,7 @@ jQuery(document).ready(function ($) {
         remove_box_cover: function (tag) {
             tag.parent().parent().remove();
         },
-        init_box_cover: function (ID) {
-
+       init_box_cover: function (ID, content = '', show = false) {
             // First Remove
             $("#" + ID).remove();
 
@@ -14,13 +13,18 @@ jQuery(document).ready(function ($) {
             <div class="container p-3">
                 <div class="close-box-cover text-left mb-3 mt-2" data-function="remove_box_cover"><i class="fa fa-close"></i></div>
                 <div class="clearfix"></div>
-                <div class="wp-text-content p-2 rtl"></div>
+                <div class="wp-text-content p-2 rtl">` + content + `</div>
             </div>
         </div>
         </div>`;
 
             // Add To Body
             $(html).appendTo('body');
+
+            // Check Show
+            if (show === true) {
+                $("#" + ID).hide().fadeIn('fast');
+            }
         }
     };
 
