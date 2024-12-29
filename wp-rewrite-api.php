@@ -271,6 +271,8 @@ class WordPress_Rewrite_API_Request
         $Rewrite_Class = $wp_query->get('rewrite_class');
         $Rewrite_Method = $wp_query->get('rewrite_method');
         if ($query->is_main_query() && !empty($Rewrite_Class) && !empty($Rewrite_Method)) {
+            $query->query_vars['no_found_rows'] = true;
+            $query->query_vars['cache_results'] = false;
             return false;
         } else {
             return $request;
